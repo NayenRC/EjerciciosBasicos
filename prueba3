@@ -1,0 +1,90 @@
+import os 
+os.system("cls")
+
+lista_principal =f"""{"-"*100}
+{"ESPECIE":<20}{"NOMBRE":<20}{"PESO":<20}{"COSTO INICIAL":>20}{"IMPUESTO":>20}{"COSTO TOTAL":>20}
+{"-"*100}
+
+"""
+
+menu ='''
+Registro de ingreso veterinaria
+1. Registrar mascota
+2. Listar mascotas registradas
+3. Imprimir ficha de registro
+4. Salir del programa
+'''
+registro =[]
+especies =['perro', 'gato', 'ave']
+
+def registrar():
+    while True:
+        try:
+            mascota = input("Ingrese la especie: ").strip().lower()
+            nom = input("Ingrese nombre: ").strip().lower()
+            peso = int(input("Ingrese peso de su mascota: "))
+            costoIni = int(input("Ingrese valor de la consuta: "))
+            impuesto = round(costoIni * 0.05)
+            costoTotal = round(costoIni + impuesto)
+            if len(mascota)>0 and len(nom)>0 and peso>0 and costoIni>0  and mascota in especies:
+                registro.append([mascota,nom,peso,costoIni,impuesto,costoTotal])
+                print(f"Costo total a pagar es de: ${costoTotal}")
+                input("registro exitoso!")
+                break
+            else:
+                input("error de ingreso")   
+        except Exception as e:
+            input(f"Excepcion de registro {str(e)}")
+
+
+def listar():
+    salida = lista_principal
+    for r in registro:
+        salida += f"{r[0]:<20}" # especie mascota
+        salida += f"{r[1]:<20}" # nombre 
+        salida += f"{r[2]:<20}" #peso
+        salida += f"{r[3]:>20}" # costo inicial
+        salida += f"{r[4]:>20}" # impuesto
+        salida += f"{r[5]:>20}" # costo total
+        salida += f"\n"
+    return salida
+
+def listarXespecie(mascota):
+    salida = lista_principal
+    for r in registro:
+        if mascota == r[0]:
+            salida += f"{r[0]:<20}" # especie mascota
+            salida += f"{r[1]:<20}" # nombre 
+            salida += f"{r[2]:<20}" #peso
+            salida += f"{r[3]:>20}" # costo inicial
+            salida += f"{r[4]:>20}" # impuesto
+            salida += f"{r[5]:>20}" # costo total
+            salida += f"\n"
+    return salida
+
+def imprimir():
+    filtro = input(f"Ingresa el tipo de registro que deseas imprimir [todos/{especies}]").strip().lower()
+    if filtro =="todos":
+        with open("listado.txt","w") as archivo:
+            archivo.write(listar())
+    elif filtro in especies:
+        with open("listado.txt","w") as archivo:
+            archivo.write(listarXespecie(filtro))
+    else:
+        input("Error en el ingreso, vuelva a intentarlo")
+
+
+while True:
+    try:
+        opc = input(menu)
+        if opc == "4":
+            break
+        if opc == "1":
+            registrar()
+        if opc == "2":
+            print(listar())
+        if opc == "3":
+            imprimir()
+
+    except Exception as e:
+        input(f"Excepcion de menu principal {str(e)}")
